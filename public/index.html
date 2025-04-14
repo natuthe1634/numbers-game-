@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Guess the Number Game</h1>
+        <p>I'm thinking of a number between 1 and 100...</p>
+        
+        <div class="game-area">
+            <input type="number" id="guessInput" min="1" max="100" placeholder="Enter your guess">
+            <button id="guessButton">Guess</button>
+            <button id="newGameButton">New Game</button>
+        </div>
+
+        <div id="message" class="message"></div>
+        <div id="attempts" class="attempts">Attempts: 0</div>
+    </div>
+
+    <script>
+        let targetNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+
+        const guessInput = document.getElementById('guessInput');
+        const guessButton = document.getElementById('guessButton');
+        const newGameButton = document.getElementById('newGameButton');
+        const message = document.getElementById('message');
+        const attemptsDisplay = document.getElementById('attempts');
+
+        guessButton.addEventListener('click', checkGuess);
+        newGameButton.addEventListener('click', startNewGame);
+        guessInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkGuess();
+        });
+
+        function checkGuess() {
+            const guess = parseInt(guessInput.value);
+            
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                message.textContent = 'Please enter a valid number between 1 and 100';
+                return;
+            }
+
+            attempts++;
+            attemptsDisplay.textContent = `Attempts: ${attempts}`;
+
+            if (guess === targetNumber) {
+                message.textContent = `Congratulations! You found the number in ${attempts} attempts!`;
+                message.className = 'message success';
+                guessButton.disabled = true;
+            } else if (guess < targetNumber) {
+                message.textContent = 'Too low! Try a higher number.';
+                message.className = 'message hint';
+            } else {
+                message.textContent = 'Too high! Try a lower number.';
+                message.className = 'message hint';
+            }
+
+            guessInput.value = '';
+            guessInput.focus();
+        }
+
+        function startNewGame() {
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            attemptsDisplay.textContent = 'Attempts: 0';
+            message.textContent = '';
+            message.className = 'message';
+            guessButton.disabled = false;
+            guessInput.value = '';
+            guessInput.focus();
+        }
+    </script>
+</body>
+</html> 
