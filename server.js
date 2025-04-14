@@ -1,12 +1,18 @@
 const express = require('express');
-const axios = require('axios'); // For API calls
+const axios = require('axios');
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.static('public')); // Serve static files
+// Serve static files
+app.use(express.static('public'));
+
+// Basic route
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
 
 app.get('/api/data', async (req, res) => {
     try {
-        // Using a different endpoint that provides English content
         const response = await axios.get('https://api.quotable.io/random');
         res.json({
             title: "Random Quote",
@@ -18,4 +24,7 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
